@@ -9,7 +9,7 @@ Please note we have a code of conduct, please follow it in all your interactions
 
 1. Update the README.md with details of changes including example hcl blocks and [example files](./examples) if appropriate.
 2. Run pre-commit hooks `pre-commit run -a`.
-3. Once all outstanding comments and checklist items have been addressed, your contribution will be merged! Merged PRs will be included in the next release. The terraform-scaleway-vpc-module maintainers take care of updating the CHANGELOG as they merge.
+3. Once all outstanding comments and checklist items have been addressed, your contribution will be merged! Merged PRs will be included in the next release. The terraform-scaleway-lb-module maintainers take care of updating the CHANGELOG as they merge.
 
 ## Checklists for contributions
 
