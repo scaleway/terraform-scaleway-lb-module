@@ -5,7 +5,7 @@
 variable "name" {
   description = "The resource name of the load balancer."
   type        = string
-  default     = null
+  default     = " "
 }
 
 variable "description" {
@@ -29,6 +29,12 @@ variable "zone" {
 ################################################################################
 # Load balancer
 ################################################################################
+
+variable "load_balancer_name" {
+  description = "The resource name of the load balancer."
+  type        = string
+  default     = ""
+}
 
 variable "load_balancer_tags" {
   description = "Additional tags for the VPC"
@@ -57,11 +63,11 @@ variable "load_balancer_type" {
 variable "private_network_configs" {
   description = "List of private networks configurations"
   type = list(object({
-    private_network = optional(object({
-      id           = optional(string, null)
-      dhcp_enabled = optional(bool, false)
-      static_ips   = optional(list(string), null)
-    }))
+    private_network = object({
+      id           = string
+      dhcp_enabled = bool
+      static_ips   = list(string)
+    })
   }))
   default = []
 }

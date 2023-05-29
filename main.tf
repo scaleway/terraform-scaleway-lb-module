@@ -42,7 +42,7 @@ resource "scaleway_lb_ip" "main" {
 
 resource "scaleway_lb" "main" {
   ip_id       = scaleway_lb_ip.main.id
-  name        = lower(coalesce(var.name, var.name))
+  name        = lower(coalesce(var.load_balancer_name, var.name))
   description = var.description
   type        = var.load_balancer_type
 
