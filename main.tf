@@ -68,18 +68,6 @@ resource "scaleway_lb" "main" {
   }
 }
 
-variable "load_balancer_route_host_header" {
-  description = "Security group rules to add to the security group created"
-  type        = any
-  default     = {}
-}
-
-variable "create_routes" {
-  description = "Determines if route should be created"
-  type        = bool
-  default     = false
-}
-
 ################################################################################
 # LOAD BALANCER ROUTES
 ################################################################################

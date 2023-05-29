@@ -73,6 +73,22 @@ variable "private_network_configs" {
 }
 
 ################################################################################
+# Routes
+################################################################################
+
+variable "create_routes" {
+  description = "Determines if route should be created"
+  type        = bool
+  default     = false
+}
+
+variable "load_balancer_route_host_header" {
+  description = "Security group rules to add to the security group created"
+  type        = any
+  default     = {}
+}
+
+################################################################################
 # Backend
 ################################################################################
 
