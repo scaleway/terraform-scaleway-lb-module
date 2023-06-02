@@ -5,7 +5,7 @@
 variable "name" {
   description = "The resource name of the load balancer."
   type        = string
-  default     = " "
+  default     = "scaleway-lb-module"
 }
 
 variable "description" {
@@ -236,4 +236,30 @@ variable "certificate_ids" {
   description = "Certificate IDs list"
   default     = null
   type        = list(string)
+}
+
+###############################################################################
+# ACLs
+###############################################################################
+
+variable "create_acls" {
+  description = "Controls if the Load Balancer ACl Rules should be created"
+  type        = bool
+  default     = true
+}
+
+variable "load_balancer_acls" {
+  description = "A list of maps describing the ACL Rules for this LB. Required key/values: actions, conditions. Optional key/values: priority, https_listener_index (default to load_balancer_acls[count.index])"
+  type        = any
+  default     = []
+}
+
+###############################################################################
+# Match Rules
+###############################################################################
+
+variable "load_balancer_match_rules" {
+  description = "A list of maps describing the ACL Match Rules for this LB. Required key/values: actions, conditions. Optional key/values: priority, http_filter (default to load_balancer_match_rules[count.index])"
+  type        = any
+  default     = []
 }

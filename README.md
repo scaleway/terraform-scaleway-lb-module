@@ -22,13 +22,13 @@ module "lb" {
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13 |
-| <a name="requirement_scaleway"></a> [scaleway](#requirement\_scaleway) | >= 2.19 |
+| <a name="requirement_scaleway"></a> [scaleway](#requirement\_scaleway) | >= 2.20 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_scaleway"></a> [scaleway](#provider\_scaleway) | >= 2.19 |
+| <a name="provider_scaleway"></a> [scaleway](#provider\_scaleway) | 2.18.0 |
 
 ## Modules
 
@@ -39,6 +39,7 @@ No modules.
 | Name | Type |
 |------|------|
 | [scaleway_lb.main](https://registry.terraform.io/providers/scaleway/scaleway/latest/docs/resources/lb) | resource |
+| [scaleway_lb_acl.acls](https://registry.terraform.io/providers/scaleway/scaleway/latest/docs/resources/lb_acl) | resource |
 | [scaleway_lb_backend.backend](https://registry.terraform.io/providers/scaleway/scaleway/latest/docs/resources/lb_backend) | resource |
 | [scaleway_lb_frontend.frontend](https://registry.terraform.io/providers/scaleway/scaleway/latest/docs/resources/lb_frontend) | resource |
 | [scaleway_lb_ip.main](https://registry.terraform.io/providers/scaleway/scaleway/latest/docs/resources/lb_ip) | resource |
@@ -68,16 +69,19 @@ No modules.
 | <a name="input_backend_timeout_server"></a> [backend\_timeout\_server](#input\_backend\_timeout\_server) | Define maximum timeout for server | `string` | `"1s"` | no |
 | <a name="input_backend_timeout_tunnel"></a> [backend\_timeout\_tunnel](#input\_backend\_timeout\_tunnel) | Define maximum timeout for tunnel | `string` | `"3s"` | no |
 | <a name="input_certificate_ids"></a> [certificate\_ids](#input\_certificate\_ids) | Certificate IDs list | `list(string)` | `null` | no |
+| <a name="input_create_acls"></a> [create\_acls](#input\_create\_acls) | Controls if the Load Balancer ACl Rules should be created | `bool` | `true` | no |
 | <a name="input_create_routes"></a> [create\_routes](#input\_create\_routes) | Determines if route should be created | `bool` | `false` | no |
 | <a name="input_description"></a> [description](#input\_description) | Define a description for the Load balancer | `string` | `null` | no |
 | <a name="input_frontend_inbound_port"></a> [frontend\_inbound\_port](#input\_frontend\_inbound\_port) | Port to be used on load balancer frontend resource as inbound port | `number` | `443` | no |
 | <a name="input_frontend_name"></a> [frontend\_name](#input\_frontend\_name) | Name to be used on load balancer frontend resource as identifier | `string` | `""` | no |
 | <a name="input_frontend_timeout_client"></a> [frontend\_timeout\_client](#input\_frontend\_timeout\_client) | Defines maximum allowed inactivity time on the client side | `string` | `"30s"` | no |
+| <a name="input_load_balancer_acls"></a> [load\_balancer\_acls](#input\_load\_balancer\_acls) | A list of maps describing the ACL Rules for this LB. Required key/values: actions, conditions. Optional key/values: priority, https\_listener\_index (default to load\_balancer\_acls[count.index]) | `any` | `[]` | no |
+| <a name="input_load_balancer_match_rules"></a> [load\_balancer\_match\_rules](#input\_load\_balancer\_match\_rules) | A list of maps describing the ACL Match Rules for this LB. Required key/values: actions, conditions. Optional key/values: priority, http\_filter (default to load\_balancer\_match\_rules[count.index]) | `any` | `[]` | no |
 | <a name="input_load_balancer_name"></a> [load\_balancer\_name](#input\_load\_balancer\_name) | The resource name of the load balancer. | `string` | `""` | no |
 | <a name="input_load_balancer_route_host_header"></a> [load\_balancer\_route\_host\_header](#input\_load\_balancer\_route\_host\_header) | Security group rules to add to the security group created | `any` | `{}` | no |
 | <a name="input_load_balancer_tags"></a> [load\_balancer\_tags](#input\_load\_balancer\_tags) | Additional tags for the VPC | `list(string)` | `[]` | no |
 | <a name="input_load_balancer_type"></a> [load\_balancer\_type](#input\_load\_balancer\_type) | The type of load balancer to create. Possible types: lb-s, lb-gp-m, lb-gp-l, lb-gp-xl | `string` | `"LB-S"` | no |
-| <a name="input_name"></a> [name](#input\_name) | The resource name of the load balancer. | `string` | `" "` | no |
+| <a name="input_name"></a> [name](#input\_name) | The resource name of the load balancer. | `string` | `"scaleway-lb-module"` | no |
 | <a name="input_private_network_configs"></a> [private\_network\_configs](#input\_private\_network\_configs) | List of private networks configurations | <pre>list(object({<br>    private_network = object({<br>      id           = string<br>      dhcp_enabled = bool<br>      static_ips   = list(string)<br>    })<br>  }))</pre> | `[]` | no |
 | <a name="input_ssl_compatibility_level"></a> [ssl\_compatibility\_level](#input\_ssl\_compatibility\_level) | Determines the minimal SSL version which needs to be supported on client side. | `string` | `"ssl_compatibility_level_modern"` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | A list of tags to add to all resources | `list(string)` | `[]` | no |

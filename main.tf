@@ -33,13 +33,15 @@ resource "scaleway_lb_frontend" "frontend" {
   inbound_port    = var.frontend_inbound_port
   timeout_client  = var.frontend_timeout_client
   certificate_ids = var.certificate_ids
+  external_acls   = true
 }
 
-### IP for LB
+### LB IP
 resource "scaleway_lb_ip" "main" {
   zone = var.zone
 }
 
+### LOAD BALANCER
 resource "scaleway_lb" "main" {
   ip_id       = scaleway_lb_ip.main.id
   name        = lower(coalesce(var.load_balancer_name, var.name))
@@ -56,7 +58,7 @@ resource "scaleway_lb" "main" {
   }
 
   ssl_compatibility_level = var.ssl_compatibility_level
-  tags = concat(
+  tags                    = concat(
     var.tags,
     var.load_balancer_tags,
   )
@@ -73,12 +75,85 @@ resource "scaleway_lb" "main" {
 ################################################################################
 
 resource "scaleway_lb_route" "route" {
-  for_each = {
-    for k, v in var.load_balancer_route_host_header : k => v
-    if var.create_routes
-  }
+  count             = var.create_routes ? length(var.load_balancer_route_host_header) : 0
   frontend_id       = scaleway_lb_frontend.frontend.id
   backend_id        = scaleway_lb_backend.backend.id
-  match_host_header = lookup(each.value, "match_host_header", null)
-  match_sni         = lookup(each.value, "match_sni", null)
+  match_host_header = try(var.load_balancer_route_host_header[count.index].match_host_header, null)
+  match_sni         = try(var.load_balancer_route_host_header[count.index].match_sni, null)
+}
+
+################################################################################
+# LOAD BALANCER ACL
+################################################################################
+
+resource "scaleway_lb_acl" "acls" {
+  count             = var.create_acls ? length(var.load_balancer_acls) : 0
+  frontend_id       = scaleway_lb_frontend.frontend.id
+  name              = var.load_balancer_acls[count.index].name
+  description       = try(lower(var.load_balancer_acls[count.index].description), null)
+  match_host_header = try(lower(var.load_balancer_acls[count.index].match_host_header), null)
+  match_sni         = try(lower(var.load_balancer_acls[count.index].match_sni), null)
+  index             = try(lower(var.load_balancer_acls[count.index].index), count.index)
+  // if not defined the ACLs are applied in ascending order
+
+  dynamic "action" {
+    for_each = [
+      for action_rule in var.load_balancer_acls[count.index].actions :
+      action_rule
+      if action_rule.type == "allow"
+    ]
+
+    content {
+      type = action.value["type"]
+    }
+  }
+
+  dynamic "action" {
+    for_each = [
+      for action_rule in var.load_balancer_acls[count.index].actions :
+      action_rule
+      if action_rule.type == "deny"
+    ]
+
+    content {
+      type = action.value["type"]
+    }
+  }
+
+  # redirect actions
+  dynamic "action" {
+    for_each = [
+      for action_rule in var.load_balancer_acls[count.index].actions :
+      action_rule
+      if action_rule.type == "redirect"
+    ]
+
+    content {
+      type = action.value["type"]
+      dynamic "redirect" {
+        for_each = action.value["redirect"]
+        content {
+          type   = lookup(redirect.value, "type", null)
+          target = lookup(redirect.value, "target", null)
+          code   = redirect.value["code"]
+        }
+      }
+    }
+  }
+
+  dynamic "match" {
+    for_each = [
+      for match_rule in var.load_balancer_match_rules[count.index].actions :
+      action_rule
+      if match_rule.type == "path_begin"
+    ]
+
+    content {
+      http_filter        = match.value["http_filter"]
+      ip_subnet          = match.value["ip_subnet"]
+      http_filter_value  = match.value["http_filter_value"]
+      http_filter_option = match.value["http_filter_option"]
+      invert             = match.value["invert"]
+    }
+  }
 }
