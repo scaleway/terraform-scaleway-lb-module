@@ -83,9 +83,9 @@ variable "create_routes" {
 }
 
 variable "load_balancer_route_host_header" {
-  description = "Security group rules to add to the security group created"
+  description = "A list of maps describing the load balancer routes. Optional match_sni, match_host_header. Conditions must be based on SNI for direction to TCP backends, or HTTP host headers for direction to HTTP backends. Use the routes endpoint to create, edit, list, get and delete your routes."
   type        = any
-  default     = {}
+  default     = []
 }
 
 ################################################################################
@@ -248,18 +248,8 @@ variable "create_acls" {
   default     = true
 }
 
-variable "load_balancer_acls" {
-  description = "A list of maps describing the ACL Rules for this LB. Required key/values: actions, conditions. Optional key/values: priority, https_listener_index (default to load_balancer_acls[count.index])"
-  type        = any
-  default     = []
-}
-
-###############################################################################
-# Match Rules
-###############################################################################
-
-variable "load_balancer_match_rules" {
-  description = "A list of maps describing the ACL Match Rules for this LB. Required key/values: actions, conditions. Optional key/values: priority, http_filter (default to load_balancer_match_rules[count.index])"
+variable "load_balancer_action_rules" {
+  description = "A list of maps describing the ACL Rules for this LB. Required key/values: actions, rules. (default to load_balancer_action_rules[count.index])"
   type        = any
   default     = []
 }

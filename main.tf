@@ -87,15 +87,15 @@ resource "scaleway_lb_route" "route" {
 ################################################################################
 
 resource "scaleway_lb_acl" "acls" {
-  count       = var.create_acls ? length(var.load_balancer_acls) : 0
+  count       = var.create_acls ? length(var.load_balancer_action_rules) : 0
   frontend_id = scaleway_lb_frontend.frontend.id
-  name        = var.load_balancer_acls[count.index].name
-  description = try(lower(var.load_balancer_acls[count.index].description), null)
-  index       = try(lower(var.load_balancer_acls[count.index].index), count.index)
+  name        = try(var.load_balancer_action_rules[count.index].name, null)
+  description = try(lower(var.load_balancer_action_rules[count.index].description), null)
+  index       = try(lower(var.load_balancer_action_rules[count.index].index), count.index)
 
   dynamic "action" {
     for_each = [
-      for action_rule in var.load_balancer_acls[count.index].actions :
+      for action_rule in var.load_balancer_action_rules[count.index].actions :
       action_rule
       if action_rule.type == "allow"
     ]
@@ -107,7 +107,7 @@ resource "scaleway_lb_acl" "acls" {
 
   dynamic "action" {
     for_each = [
-      for action_rule in var.load_balancer_acls[count.index].actions :
+      for action_rule in var.load_balancer_action_rules[count.index].actions :
       action_rule
       if action_rule.type == "deny"
     ]
@@ -120,7 +120,7 @@ resource "scaleway_lb_acl" "acls" {
   # redirect actions
   dynamic "action" {
     for_each = [
-      for action_rule in var.load_balancer_acls[count.index].actions :
+      for action_rule in var.load_balancer_action_rules[count.index].actions :
       action_rule
       if action_rule.type == "redirect"
     ]
@@ -132,7 +132,7 @@ resource "scaleway_lb_acl" "acls" {
         content {
           type   = lookup(redirect.value, "type", null)
           target = lookup(redirect.value, "target", null)
-          code   = redirect.value["code"]
+          code   = try(redirect.value["code"], null)
         }
       }
     }
@@ -140,17 +140,16 @@ resource "scaleway_lb_acl" "acls" {
 
   dynamic "match" {
     for_each = [
-      for match_rule in var.load_balancer_match_rules[count.index].actions :
+      for match_rule in var.load_balancer_action_rules[count.index].rules :
       match_rule
       if match_rule.type == "path_begin"
     ]
 
     content {
-      http_filter        = match.value["http_filter"]
-      ip_subnet          = match.value["ip_subnet"]
-      http_filter_value  = match.value["http_filter_value"]
-      http_filter_option = match.value["http_filter_option"]
-      invert             = match.value["invert"]
+      ip_subnet         = try(match.value["ip_subnet"], null)
+      http_filter_value = try(match.value["http_filter_value"], null)
+      http_filter       = try(match.value["http_filter"], null)
+      invert            = try(match.value["invert"], null)
     }
   }
 }
