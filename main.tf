@@ -58,7 +58,7 @@ resource "scaleway_lb" "main" {
   }
 
   ssl_compatibility_level = var.ssl_compatibility_level
-  tags                    = concat(
+  tags = concat(
     var.tags,
     var.load_balancer_tags,
   )
@@ -87,14 +87,11 @@ resource "scaleway_lb_route" "route" {
 ################################################################################
 
 resource "scaleway_lb_acl" "acls" {
-  count             = var.create_acls ? length(var.load_balancer_acls) : 0
-  frontend_id       = scaleway_lb_frontend.frontend.id
-  name              = var.load_balancer_acls[count.index].name
-  description       = try(lower(var.load_balancer_acls[count.index].description), null)
-  match_host_header = try(lower(var.load_balancer_acls[count.index].match_host_header), null)
-  match_sni         = try(lower(var.load_balancer_acls[count.index].match_sni), null)
-  index             = try(lower(var.load_balancer_acls[count.index].index), count.index)
-  // if not defined the ACLs are applied in ascending order
+  count       = var.create_acls ? length(var.load_balancer_acls) : 0
+  frontend_id = scaleway_lb_frontend.frontend.id
+  name        = var.load_balancer_acls[count.index].name
+  description = try(lower(var.load_balancer_acls[count.index].description), null)
+  index       = try(lower(var.load_balancer_acls[count.index].index), count.index)
 
   dynamic "action" {
     for_each = [
@@ -144,7 +141,7 @@ resource "scaleway_lb_acl" "acls" {
   dynamic "match" {
     for_each = [
       for match_rule in var.load_balancer_match_rules[count.index].actions :
-      action_rule
+      match_rule
       if match_rule.type == "path_begin"
     ]
 
