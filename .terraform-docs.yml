@@ -33,11 +33,14 @@ output:
 
     ``` hcl
     module "lb" {
-      # to modify
-      source  = lb"
-      version = ">= 1.0.0"
-
-      name = "my_lb"
+      source                          = "../../"
+      zone                            = local.zone
+      name                            = local.name
+      tags                            = local.tags
+      create_acls                     = true
+      create_routes                   = true
+      load_balancer_action_rules      = local.load_balancer_action_rules
+      load_balancer_route_host_header = local.load_balancer_route_host_header
     }
     ```
 

@@ -8,13 +8,16 @@ Terraform module that can be used to deploy Load Balancer resources on Scaleway.
 The example below provision a basic Load Balancer.
 
 ``` hcl
-module "lb" {
-  # to modify
-  source  = lb"
-  version = ">= 1.0.0"
-
-  name = "my_lb"
-}
+  module "lb" {
+    source                          = "../../"
+    zone                            = local.zone
+    name                            = local.name
+    tags                            = local.tags
+    create_acls                     = true
+    create_routes                   = true
+    load_balancer_action_rules      = local.load_balancer_action_rules
+    load_balancer_route_host_header = local.load_balancer_route_host_header
+  }
 ```
 
 ## Requirements
@@ -28,7 +31,7 @@ module "lb" {
 
 | Name | Version |
 |------|---------|
-| <a name="provider_scaleway"></a> [scaleway](#provider\_scaleway) | 2.18.0 |
+| <a name="provider_scaleway"></a> [scaleway](#provider\_scaleway) | >= 2.20 |
 
 ## Modules
 
