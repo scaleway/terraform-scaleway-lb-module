@@ -26,6 +26,12 @@ variable "zone" {
   default     = "fr-par-1"
 }
 
+variable "create_lb" {
+  description = "Controls if the Load Balancer should be created"
+  type        = bool
+  default     = true
+}
+
 ################################################################################
 # Load balancer
 ################################################################################
@@ -204,6 +210,11 @@ variable "backend_proxy_protocol" {
   default     = "none"
   type        = string
   description = "Type of PROXY protocol to enable"
+}
+
+variable "load_balancer_backend_health_check" {
+  type        = any
+  description = "A list of maps describing the Health check method for this LB. Required key/values: type: tcp, http, https. Optional: uri, code, sni.  (default to load_balancer_backend_health_check[count.index]"
 }
 
 ################################################################################

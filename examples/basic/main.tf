@@ -12,6 +12,21 @@ locals {
     "terraform-scaleway-lb-module"
   ]
 
+  load_balancer_backend_health_check = [
+    {
+      methods = [
+        {
+          type = "tcp"
+        }
+        #        {
+        #          type = "http"
+        #          uri = "http://test.com/health"
+        #        }
+      ]
+    }
+  ]
+
+
   load_balancer_action_rules = [
     {
       name    = "name-acl"
@@ -45,12 +60,14 @@ locals {
 ################################################################################
 
 module "lb" {
-  source                          = "../../"
-  zone                            = local.zone
-  name                            = local.name
-  tags                            = local.tags
-  create_acls                     = true
-  create_routes                   = true
-  load_balancer_action_rules      = local.load_balancer_action_rules
-  load_balancer_route_host_header = local.load_balancer_route_host_header
+  source                             = "../../"
+  zone                               = local.zone
+  name                               = local.name
+  tags                               = local.tags
+  create_lb                          = true
+  create_acls                        = true
+  create_routes                      = true
+  load_balancer_action_rules         = local.load_balancer_action_rules
+  load_balancer_route_host_header    = local.load_balancer_route_host_header
+  load_balancer_backend_health_check = local.load_balancer_backend_health_check
 }

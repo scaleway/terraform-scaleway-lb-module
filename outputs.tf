@@ -15,5 +15,5 @@ output "load_balancer_ids" {
 
 output "load_balancer_backend_pool" {
   description = "List of IP addresses of backend servers attached to this backends"
-  value       = try(scaleway_lb_backend.backend.server_ips, null)
+  value       = try(scaleway_lb_backend.backend[*].server_ips, null)
 }
