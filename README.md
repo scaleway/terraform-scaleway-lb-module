@@ -8,16 +8,16 @@ Terraform module that can be used to deploy Load Balancer resources on Scaleway.
 The example below provision a basic Load Balancer.
 
 ``` hcl
-  module "lb" {
-    source                          = "../../"
-    zone                            = local.zone
-    name                            = local.name
-    tags                            = local.tags
-    create_acls                     = true
-    create_routes                   = true
-    load_balancer_action_rules      = local.load_balancer_action_rules
-    load_balancer_route_host_header = local.load_balancer_route_host_header
-  }
+module "lb" {
+  source                          = "../../"
+  zone                            = local.zone
+  name                            = local.name
+  tags                            = local.tags
+  create_acls                     = true
+  create_routes                   = true
+  load_balancer_action_rules      = local.load_balancer_action_rules
+  load_balancer_route_host_header = local.load_balancer_route_host_header
+}
 ```
 
 ## Requirements
@@ -31,7 +31,7 @@ The example below provision a basic Load Balancer.
 
 | Name | Version |
 |------|---------|
-| <a name="provider_scaleway"></a> [scaleway](#provider\_scaleway) | >= 2.20 |
+| <a name="provider_scaleway"></a> [scaleway](#provider\_scaleway) | 2.18.0 |
 
 ## Modules
 
@@ -73,12 +73,14 @@ No modules.
 | <a name="input_backend_timeout_tunnel"></a> [backend\_timeout\_tunnel](#input\_backend\_timeout\_tunnel) | Define maximum timeout for tunnel | `string` | `"3s"` | no |
 | <a name="input_certificate_ids"></a> [certificate\_ids](#input\_certificate\_ids) | Certificate IDs list | `list(string)` | `null` | no |
 | <a name="input_create_acls"></a> [create\_acls](#input\_create\_acls) | Controls if the Load Balancer ACl Rules should be created | `bool` | `true` | no |
+| <a name="input_create_lb"></a> [create\_lb](#input\_create\_lb) | Controls if the Load Balancer should be created | `bool` | `true` | no |
 | <a name="input_create_routes"></a> [create\_routes](#input\_create\_routes) | Determines if route should be created | `bool` | `false` | no |
 | <a name="input_description"></a> [description](#input\_description) | Define a description for the Load balancer | `string` | `null` | no |
 | <a name="input_frontend_inbound_port"></a> [frontend\_inbound\_port](#input\_frontend\_inbound\_port) | Port to be used on load balancer frontend resource as inbound port | `number` | `443` | no |
 | <a name="input_frontend_name"></a> [frontend\_name](#input\_frontend\_name) | Name to be used on load balancer frontend resource as identifier | `string` | `""` | no |
 | <a name="input_frontend_timeout_client"></a> [frontend\_timeout\_client](#input\_frontend\_timeout\_client) | Defines maximum allowed inactivity time on the client side | `string` | `"30s"` | no |
 | <a name="input_load_balancer_action_rules"></a> [load\_balancer\_action\_rules](#input\_load\_balancer\_action\_rules) | A list of maps describing the ACL Rules for this LB. Required key/values: actions, rules. (default to load\_balancer\_action\_rules[count.index]) | `any` | `[]` | no |
+| <a name="input_load_balancer_backend_health_check"></a> [load\_balancer\_backend\_health\_check](#input\_load\_balancer\_backend\_health\_check) | A list of maps describing the Health check method for this LB. Required key/values: type: tcp, http, https. Optional: uri, code, sni.  (default to load\_balancer\_backend\_health\_check[count.index] | `any` | n/a | yes |
 | <a name="input_load_balancer_name"></a> [load\_balancer\_name](#input\_load\_balancer\_name) | The resource name of the load balancer. | `string` | `""` | no |
 | <a name="input_load_balancer_route_host_header"></a> [load\_balancer\_route\_host\_header](#input\_load\_balancer\_route\_host\_header) | A list of maps describing the load balancer routes. Optional match\_sni, match\_host\_header. Conditions must be based on SNI for direction to TCP backends, or HTTP host headers for direction to HTTP backends. Use the routes endpoint to create, edit, list, get and delete your routes. | `any` | `[]` | no |
 | <a name="input_load_balancer_tags"></a> [load\_balancer\_tags](#input\_load\_balancer\_tags) | Additional tags for the VPC | `list(string)` | `[]` | no |
