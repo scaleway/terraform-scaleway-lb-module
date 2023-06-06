@@ -7,7 +7,7 @@ locals {
   name   = "ex-${basename(path.cwd)}"
   region = "fr-par"
   zone   = "fr-par-1"
-  tags   = [
+  tags = [
     local.name,
     "terraform-scaleway-lb-module"
   ]
@@ -18,10 +18,6 @@ locals {
         {
           type = "tcp"
         }
-        #        {
-        #          type = "http"
-        #          uri = "http://test.com/health"
-        #        }
       ]
     }
   ]
@@ -29,7 +25,7 @@ locals {
 
   load_balancer_action_rules = [
     {
-      name    = "name-acl"
+      name = "name-acl"
       actions = [
         {
           type = "allow"
