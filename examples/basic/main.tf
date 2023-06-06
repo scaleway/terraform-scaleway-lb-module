@@ -22,7 +22,6 @@ locals {
     }
   ]
 
-
   load_balancer_action_rules = [
     {
       name = "name-acl"
