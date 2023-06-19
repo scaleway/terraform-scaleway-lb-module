@@ -9,7 +9,7 @@ The example below provision a basic Load Balancer.
 
 ``` hcl
 module "lb" {
-  source                          = "../../"
+  source                          = "scaleway/lb-module/scaleway"
   zone                            = local.zone
   name                            = local.name
   tags                            = local.tags
