@@ -25,29 +25,6 @@ resource "scaleway_lb_backend" "backend" {
   proxy_protocol              = var.backend_proxy_protocol
   on_marked_down_action       = var.backend_marked_down_action
 
-  dynamic "health_check_tcp" {
-    for_each = [
-      for health_checker in var.load_balancer_backend_health_check[count.index].methods :
-      health_checker
-      if health_checker.type == "tcp"
-    ]
-    content {}
-  }
-
-  dynamic "health_check_http" {
-    for_each = [
-      for health_checker in var.load_balancer_backend_health_check[count.index].methods :
-      health_checker
-      if health_checker.type == "http"
-    ]
-    content {
-      uri         = try(health_check_http.value["uri"], null)
-      code        = try(health_check_http.value["code"], null)
-      method      = try(health_check_http.value["method"], null)
-      host_header = try(health_check_http.value["host_header"], null)
-    }
-  }
-
   dynamic "health_check_https" {
     for_each = [
       for health_checker in var.load_balancer_backend_health_check[count.index].methods :
@@ -55,7 +32,7 @@ resource "scaleway_lb_backend" "backend" {
       if health_checker.type == "https"
     ]
     content {
-      uri         = try(health_check_https.value["uri"], null)
+      uri         = try(health_check_https.value["uri"], "")
       code        = try(health_check_https.value["code"], null)
       method      = try(health_check_https.value["method"], null)
       host_header = try(health_check_https.value["host_header"], null)

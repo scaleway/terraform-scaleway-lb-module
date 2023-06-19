@@ -16,7 +16,12 @@ locals {
     {
       methods = [
         {
-          type = "tcp"
+          type        = "https"
+          uri         = "https://test.com/health"
+          method      = "GET"
+          code        = 200
+          host_header = "test.com"
+          sni         = "sni.test.com"
         }
       ]
     }

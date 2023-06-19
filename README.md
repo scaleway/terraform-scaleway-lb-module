@@ -31,7 +31,7 @@ module "lb" {
 
 | Name | Version |
 |------|---------|
-| <a name="provider_scaleway"></a> [scaleway](#provider\_scaleway) | 2.18.0 |
+| <a name="provider_scaleway"></a> [scaleway](#provider\_scaleway) | 2.21.0 |
 
 ## Modules
 
@@ -80,7 +80,7 @@ No modules.
 | <a name="input_frontend_name"></a> [frontend\_name](#input\_frontend\_name) | Name to be used on load balancer frontend resource as identifier | `string` | `""` | no |
 | <a name="input_frontend_timeout_client"></a> [frontend\_timeout\_client](#input\_frontend\_timeout\_client) | Defines maximum allowed inactivity time on the client side | `string` | `"30s"` | no |
 | <a name="input_load_balancer_action_rules"></a> [load\_balancer\_action\_rules](#input\_load\_balancer\_action\_rules) | A list of maps describing the ACL Rules for this LB. Required key/values: actions, rules. (default to load\_balancer\_action\_rules[count.index]) | `any` | `[]` | no |
-| <a name="input_load_balancer_backend_health_check"></a> [load\_balancer\_backend\_health\_check](#input\_load\_balancer\_backend\_health\_check) | A list of maps describing the Health check method for this LB. Required key/values: type: tcp, http, https. Optional: uri, code, sni.  (default to load\_balancer\_backend\_health\_check[count.index] | `any` | n/a | yes |
+| <a name="input_load_balancer_backend_health_check"></a> [load\_balancer\_backend\_health\_check](#input\_load\_balancer\_backend\_health\_check) | A list of maps describing the Health check method for this LB. Required key/values: type: https. Required: uri Optional: code, sni. (default to load\_balancer\_backend\_health\_check[count.index] | `any` | <pre>[<br>  {<br>    "methods": [<br>      {<br>        "type": "https"<br>      }<br>    ]<br>  }<br>]</pre> | no |
 | <a name="input_load_balancer_name"></a> [load\_balancer\_name](#input\_load\_balancer\_name) | The resource name of the load balancer. | `string` | `""` | no |
 | <a name="input_load_balancer_route_host_header"></a> [load\_balancer\_route\_host\_header](#input\_load\_balancer\_route\_host\_header) | A list of maps describing the load balancer routes. Optional match\_sni, match\_host\_header. Conditions must be based on SNI for direction to TCP backends, or HTTP host headers for direction to HTTP backends. Use the routes endpoint to create, edit, list, get and delete your routes. | `any` | `[]` | no |
 | <a name="input_load_balancer_tags"></a> [load\_balancer\_tags](#input\_load\_balancer\_tags) | Additional tags for the VPC | `list(string)` | `[]` | no |

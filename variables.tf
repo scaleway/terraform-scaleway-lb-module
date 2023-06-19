@@ -214,7 +214,16 @@ variable "backend_proxy_protocol" {
 
 variable "load_balancer_backend_health_check" {
   type        = any
-  description = "A list of maps describing the Health check method for this LB. Required key/values: type: tcp, http, https. Optional: uri, code, sni.  (default to load_balancer_backend_health_check[count.index]"
+  description = "A list of maps describing the Health check method for this LB. Required key/values: type: https. Required: uri Optional: code, sni. (default to load_balancer_backend_health_check[count.index]"
+  default = [
+    {
+      methods = [
+        {
+          type = "https"
+        }
+      ]
+    }
+  ]
 }
 
 ################################################################################
