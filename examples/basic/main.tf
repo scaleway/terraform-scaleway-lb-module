@@ -12,20 +12,14 @@ locals {
     "terraform-scaleway-lb-module"
   ]
 
-  load_balancer_backend_health_check = [
-    {
-      methods = [
-        {
-          type        = "https"
-          uri         = "https://test.com/health"
-          method      = "GET"
-          code        = 200
-          host_header = "test.com"
-          sni         = "sni.test.com"
-        }
-      ]
-    }
-  ]
+  load_balancer_backend_health_check = {
+    type        = "https"
+    uri         = "https://test.com/health"
+    method      = "GET"
+    code        = 200
+    host_header = "test.com"
+    sni         = "sni.test.com"
+  }
 
   load_balancer_action_rules = [
     {
@@ -46,13 +40,6 @@ locals {
       ]
     }
   ]
-
-  load_balancer_route_host_header = [
-    {
-      match_sni = "sni.scaleway.com"
-      #      match_host_header = "host.scaleway.com"
-    }
-  ]
 }
 
 ################################################################################
@@ -60,14 +47,12 @@ locals {
 ################################################################################
 
 module "lb" {
-  source                             = "../../"
-  zone                               = local.zone
-  name                               = local.name
-  tags                               = local.tags
-  create_lb                          = true
-  create_acls                        = true
-  create_routes                      = true
-  load_balancer_action_rules         = local.load_balancer_action_rules
-  load_balancer_route_host_header    = local.load_balancer_route_host_header
-  load_balancer_backend_health_check = local.load_balancer_backend_health_check
+  source                                   = "../../"
+  zone                                     = local.zone
+  name                                     = local.name
+  tags                                     = local.tags
+  create_acls                              = true
+  create_routes                            = true
+  load_balancer_action_rules               = local.load_balancer_action_rules
+  load_balancer_backend_health_check_https = local.load_balancer_backend_health_check
 }

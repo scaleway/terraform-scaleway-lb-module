@@ -3,7 +3,6 @@
 ################################################################################
 
 resource "scaleway_lb_backend" "backend" {
-  count                       = var.create_lb ? 1 : 0
   name                        = lower(coalesce(var.backend_name, var.name))
   lb_id                       = scaleway_lb.main.id
   forward_protocol            = var.backend_forward_protocol
@@ -24,28 +23,19 @@ resource "scaleway_lb_backend" "backend" {
   health_check_port           = var.backend_health_check_port
   proxy_protocol              = var.backend_proxy_protocol
   on_marked_down_action       = var.backend_marked_down_action
-
-  dynamic "health_check_https" {
-    for_each = [
-      for health_checker in var.load_balancer_backend_health_check[count.index].methods :
-      health_checker
-      if health_checker.type == "https"
-    ]
-    content {
-      uri         = try(health_check_https.value["uri"], "")
-      code        = try(health_check_https.value["code"], null)
-      method      = try(health_check_https.value["method"], null)
-      host_header = try(health_check_https.value["host_header"], null)
-      sni         = try(health_check_https.value["sni"], null)
-    }
+  health_check_https {
+    uri         = try(var.load_balancer_backend_health_check_https.uri, "")
+    code        = try(var.load_balancer_backend_health_check_https.code, null)
+    method      = try(var.load_balancer_backend_health_check_https.method, null)
+    host_header = try(var.load_balancer_backend_health_check_https.host_header, null)
+    sni         = try(var.load_balancer_backend_health_check_https.sni, null)
   }
 }
 
 resource "scaleway_lb_frontend" "frontend" {
-  count           = var.create_lb ? 1 : 0
   name            = lower(coalesce(var.frontend_name, var.name))
   lb_id           = scaleway_lb.main.id
-  backend_id      = scaleway_lb_backend.backend[count.index].id
+  backend_id      = scaleway_lb_backend.backend.id
   inbound_port    = var.frontend_inbound_port
   timeout_client  = var.frontend_timeout_client
   certificate_ids = var.certificate_ids
@@ -104,7 +94,7 @@ resource "scaleway_lb_route" "route" {
 
 resource "scaleway_lb_acl" "acls" {
   count       = var.create_acls ? length(var.load_balancer_action_rules) : 0
-  frontend_id = scaleway_lb_frontend.frontend[count.index].id
+  frontend_id = scaleway_lb_frontend.frontend.id
   name        = try(var.load_balancer_action_rules[count.index].name, null)
   description = try(lower(var.load_balancer_action_rules[count.index].description), null)
   index       = try(lower(var.load_balancer_action_rules[count.index].index), count.index)
